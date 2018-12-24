@@ -7,8 +7,9 @@ const STORAGE_KEY = 'STACKROLL'
 const version = '0.0.1'
 
 const state = {
-  todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
-  rolls: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
+  todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'todos') || '[]'),
+  rolls: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'rolls') || '[]'),
+  tape: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'tape') || '[]'),
 }
 
 const mutations = {
@@ -19,8 +20,12 @@ const mutations = {
   editRoll (state, roll) {
     console.log('not implemented')
   },
-  deleteRoll (state, roll) {
+  removeRoll (state, roll) {
     state.rolls.splice(state.rolls.indexOf(roll), 1)
+  },
+  rollStack (state, stack) {
+    const { total, possible } = rollDice(stack.stack)
+    // TODO: implement the tape here
   },
   addTodo (state, todo) {
     state.todos.push(todo)
@@ -43,6 +48,9 @@ const actions = {
   },
   removeRoll ({ commit }, roll) {
     commit('removeRoll', roll)
+  },
+  rollStack ({ commit }, roll) {
+    commit('rollStack', roll)
   },
   addTodo ({ commit }, text) {
     commit('addTodo', {
@@ -74,9 +82,10 @@ const actions = {
 }
 
 const plugins = [store => {
-  store.subscribe((mutation, { todos, rolls }) => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rolls))
+  store.subscribe((mutation, { todos, rolls, tape }) => {
+    window.localStorage.setItem(STORAGE_KEY+'todos', JSON.stringify(todos))
+    window.localStorage.setItem(STORAGE_KEY+'rolls', JSON.stringify(rolls))
+    window.localStorage.setItem(STORAGE_KEY+'tape', JSON.stringify(tape))
   })
 }]
 
@@ -86,3 +95,27 @@ export default new Vuex.Store({
   actions,
   plugins
 })
+
+function rollDice(stack) {
+  var possible = 0
+  var total = 0
+  stack.map(item => {
+    const diceRolls = 0
+    if (item.type == 'dice') {
+      const val = getRandom(parseInt(item.value))
+      possible = possible + parseInt(item.value)
+      total = total + parseInt(val)
+    }
+    if (item.type == 'modifier') {
+      total = total + parseInt(item.value)
+    }
+  })
+  return {
+    possible,
+    total
+  }
+}
+
+function getRandom (possible) {
+  return Math.floor(Math.random() * possible) + 1
+}

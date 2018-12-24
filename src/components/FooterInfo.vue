@@ -1,8 +1,5 @@
 <template>
-<footer class="caption">
-  <p>Double-click to edit a stack.</p>
-  <p>Single-click to roll a stack.</p>
-</footer>
+
 </template>
 
 <style lang="stylus">
