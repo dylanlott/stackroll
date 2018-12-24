@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const STORAGE_KEY = 'STACKROLL'
+const version = '0.0.1'
 
 const state = {
   todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
@@ -73,8 +74,9 @@ const actions = {
 }
 
 const plugins = [store => {
-  store.subscribe((mutation, { todos }) => {
+  store.subscribe((mutation, { todos, rolls }) => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rolls))
   })
 }]
 

@@ -42,7 +42,7 @@
         <v-flex xs12 class="ma-2">
           <v-text-field
             placeholder="Name your stack"
-            v-model="stack.name"
+            v-model="roll.name"
           ></v-text-field>
         </v-flex>
           <h2>Add dice to the stack</h2>
@@ -81,12 +81,12 @@
           </v-flex>
 
           <v-list>
-            <v-list-tile  v-for="item in stack">
+            <v-list-tile  v-for="item in roll.stack">
               {{ item.name }} <v-btn @click="addStack()" fab small dark color="warning"><v-icon small>delete</v-icon></v-btn>
             </v-list-tile>
           </v-list>
 
-          <v-btn @click="addStack(stack)" block color="primary">Create Roll</v-btn>
+          <v-btn @click="addStack(roll)" block color="primary">Create Roll</v-btn>
 
         </v-card-text>
       </v-card>
@@ -96,6 +96,9 @@
         <v-list>
           <v-list-tile v-for="roll in rolls">
             {{ roll }}
+          </v-list-tile>
+          <v-list-tile v-if="rolls.length < 1">
+            You haven't added any rolls yet.
           </v-list-tile>
         </v-list>
       </v-card>
@@ -182,7 +185,10 @@ export default {
         value: 0
       },
       name: '',
-      stack: [],
+      roll: {
+        name: '',
+        stack: [],
+      },
       dice: [
         { type: 'dice', name: 'D20', value: 20 },
         { type: 'dice', name: 'D10', value: 10 },
@@ -227,10 +233,10 @@ export default {
       this.newTodo = ''
     },
     addItem (item) {
-      this.stack.push(item)
+      this.roll.stack.push(item)
     },
     addModifier (mod) {
-      this.stack.push({
+      this.roll.stack.push({
         value: mod.value,
         name: mod.name,
         type: 'modifier'
@@ -241,9 +247,8 @@ export default {
         type: 'modifier'
       }
     },
-    addStack (stack) {
-      console.log(stack)
-      this.$store.dispatch('addRoll', stack)
+    addStack (roll) {
+      this.$store.dispatch('addRoll', roll)
     }
   },
   filters: {
