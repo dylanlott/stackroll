@@ -3,13 +3,24 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const STORAGE_KEY = 'vuetify-todos'
+const STORAGE_KEY = 'STACKROLL'
 
 const state = {
-  todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
+  todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
+  rolls: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
 }
 
 const mutations = {
+  addRoll (state, roll) {
+    console.log('adding roll: ', roll)
+    state.rolls.push(roll)
+  },
+  editRoll (state, roll) {
+    console.log('not implemented')
+  },
+  deleteRoll (state, roll) {
+    state.rolls.splice(state.rolls.indexOf(roll), 1)
+  },
   addTodo (state, todo) {
     state.todos.push(todo)
   },
@@ -23,6 +34,15 @@ const mutations = {
 }
 
 const actions = {
+  addRoll ({ commit }, roll) {
+    commit('addRoll', roll)
+  },
+  editRoll ({ commit }, roll) {
+    commit('editRoll')
+  },
+  removeRoll ({ commit }, roll) {
+    commit('removeRoll', roll)
+  },
   addTodo ({ commit }, text) {
     commit('addTodo', {
       uid: Date.now(),

@@ -2,7 +2,8 @@
   <v-layout row wrap>
     <v-flex text-xs-center>
       <!-- header -->
-      <h1 class="primary--text display-3 font-weight-medium my-3">TODOS</h1>
+      <h1 class="display-3 font-weight-medium my-3">StackRoll</h1>
+     <!--  
       <v-card>
         <v-list class="pa-0">
           <v-list-tile>
@@ -35,7 +36,70 @@
           </v-list-tile>
         </v-list>
       </v-card>
-      <!-- main -->
+      -->
+      <v-card>
+      </v-card-text>
+        <v-flex xs12 class="ma-2">
+          <v-text-field
+            placeholder="Name your stack"
+            v-model="stack.name"
+          ></v-text-field>
+        </v-flex>
+          <h2>Add dice to the stack</h2>
+          <v-layout row wrap>
+            <v-flex v-for="item in dice">
+              <v-btn @click="addItem(item)" small color="primary">
+                {{ item.name }}
+              </v-btn>
+            </v-flex>
+          </v-layout>
+
+          <h2>Add a modifier</h2>
+          <v-flex xs12>
+            <v-layout row wrap>
+
+              <v-flex xs9>
+                <v-text-field
+                  outline
+                  placeholder="Modifier name"
+                  class="ma-2"
+                  v-model="modifier.name"
+                ></v-text-field>
+              </v-flex>
+
+              <v-flex xs3>
+                <v-text-field
+                  class="ma-2"
+                  outline
+                  type="number"
+                  v-model="modifier.value"   
+                  ></v-text-field>
+              </v-flex>
+
+            <v-btn block @click="addModifier(modifier)"color="accent">Add Modifier</v-btn>
+            </v-layout>
+          </v-flex>
+
+          <v-list>
+            <v-list-tile  v-for="item in stack">
+              {{ item.name }} <v-btn @click="addStack()" fab small dark color="warning"><v-icon small>delete</v-icon></v-btn>
+            </v-list-tile>
+          </v-list>
+
+          <v-btn @click="addStack(stack)" block color="primary">Create Roll</v-btn>
+
+        </v-card-text>
+      </v-card>
+
+      <v-card class="my-4">
+        <v-card-title><h2>Rolls</h2></v-card-title>
+        <v-list>
+          <v-list-tile v-for="roll in rolls">
+            {{ roll }}
+          </v-list-tile>
+        </v-list>
+      </v-card>
+      <!-- main 
       <v-card class="mt-3" v-show="todos.length">
         <v-progress-linear class="my-0" v-model="progressPercentage"/>
         <v-card-actions class="px-3" v-show="todos.length">
@@ -84,7 +148,7 @@
       >
         Clear completed
       </v-btn>
-      <!-- footer -->
+    -->
       <footer-info></footer-info>
     </v-flex>
   </v-layout>
@@ -111,7 +175,22 @@ export default {
     return {
       newTodo: '',
       filters: filters,
-      visibility: this.filter
+      visibility: this.filter,
+      modifier: {
+        type: 'modifier',
+        name: '',
+        value: 0
+      },
+      name: '',
+      stack: [],
+      dice: [
+        { type: 'dice', name: 'D20', value: 20 },
+        { type: 'dice', name: 'D10', value: 10 },
+        { type: 'dice', name: 'D8', value: 8 },
+        { type: 'dice', name: 'D6', value: 6 },
+        { type: 'dice', name: 'D4', value: 4 }
+      ],
+      // rolls: []
     }
   },
   computed: {
@@ -130,6 +209,9 @@ export default {
     progressPercentage () {
       const len = this.todos.length
       return ((len - this.remaining) * 100) / len
+    },
+    rolls () {
+      return this.$store.state.rolls
     }
   },
   methods: {
@@ -143,6 +225,25 @@ export default {
         this.$store.dispatch('addTodo', text)
       }
       this.newTodo = ''
+    },
+    addItem (item) {
+      this.stack.push(item)
+    },
+    addModifier (mod) {
+      this.stack.push({
+        value: mod.value,
+        name: mod.name,
+        type: 'modifier'
+      })
+      this.modifier = {
+        value: 0,
+        name: '',
+        type: 'modifier'
+      }
+    },
+    addStack (stack) {
+      console.log(stack)
+      this.$store.dispatch('addRoll', stack)
     }
   },
   filters: {
@@ -157,4 +258,7 @@ h1
   opacity: 0.3
 .v-text-field .v-input__slot
   padding: 0 !important
+
+.v-text-field__slot
+  padding-left:8px !important
 </style>

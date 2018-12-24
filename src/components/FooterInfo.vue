@@ -1,8 +1,7 @@
 <template>
 <footer class="caption">
-  <p>Double-click to edit a todo</p>
-  <p>Inspired by <a href="http://todomvc.com" target="_blank" rel="noopener">TodoMVC</a></p>
-  <p><a href="https://github.com/davidgaroro/vuetify-todo-pwa" target="_blank" rel="noopener">View on GitHub</a></p>
+  <p>Double-click to edit a stack.</p>
+  <p>Single-click to roll a stack.</p>
 </footer>
 </template>
 
