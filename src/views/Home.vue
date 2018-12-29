@@ -17,7 +17,7 @@
           </v-flex>
             <h2>Add dice to the stack</h2>
             <v-layout justify-space-between row wrap>
-              <v-flex v-for="item in dice">
+              <v-flex :key="index" v-for="(item, index) in dice">
                 <v-btn @click="addItem(item)" color="primary">
                   {{ item.name }}
                 </v-btn>
@@ -42,17 +42,19 @@
                     class="ma-2"
                     outline
                     type="number"
-                    v-model="modifier.value"   
-                    ></v-text-field>
+                    v-model="modifier.value"
+                  ></v-text-field>
                 </v-flex>
 
-              <v-btn block @click="addModifier(modifier)"color="accent">Add Modifier</v-btn>
+              <v-btn block @click="addModifier(modifier)" color="accent">Add Modifier</v-btn>
               </v-layout>
             </v-flex>
 
             <v-list>
-              <v-list-tile  v-for="item in roll.stack">
-                {{ item.name }} <v-btn @click="addStack()" fab small dark color="warning"><v-icon small>delete</v-icon></v-btn>
+              <v-list-tile :key="index" v-for="(item, index) in roll.stack">
+                {{ item.name }}
+                <v-spacer></v-spacer>
+                <v-btn @click="addStack()" fab small dark color="warning"><v-icon small>delete</v-icon></v-btn>
               </v-list-tile>
             </v-list>
 
@@ -64,31 +66,25 @@
         <v-card class="my-4">
           <v-card-title><h2>Rolls</h2></v-card-title>
           <v-list dense>
-            <v-list-tile v-for="roll in rolls">
+            <v-list-tile :key="index" v-for="(roll, index) in rolls">
               <v-btn small @click="rollStack(roll)" color="accent">
                 <v-icon>refresh</v-icon>
               </v-btn>
-
               <v-spacer></v-spacer>
-
-              {{ roll.name || "" }} 
-
+              {{ roll.name || "" }}
               <v-spacer></v-spacer>
-
-                <v-icon color="error lighten-1" @click="" small>delete</v-icon>
+              <v-icon color="error lighten-1" @click="removeRoll(roll)" small>delete</v-icon>
             </v-list-tile>
             <v-list-tile v-if="rolls.length < 1">
               You haven't added any rolls yet.
             </v-list-tile>
           </v-list>
-        </v-card-text>
-      </v-card>
-
-
+        </v-card>
         <v-card class="my-4">
           <v-card-title><h2>Tape</h2></v-card-title>
           <v-list dense>
-            <v-list-tile v-for="item in tape">
+            <v-list-tile :key="index" v-for="(item, index) in tape">
+              {{ item.stack.name }} {{ item.total }} / {{ item.possible }}
             </v-list-tile>
           </v-list>
         </v-card>
@@ -114,6 +110,7 @@ const filters = {
 }
 
 export default {
+  name: 'stackroll',
   props: ['filter'],
   components: {
     TodoItem,
@@ -135,7 +132,7 @@ export default {
       name: '',
       roll: {
         name: '',
-        stack: [],
+        stack: []
       },
       dice: [
         { type: 'dice', name: 'D20', value: 20 },
@@ -143,8 +140,7 @@ export default {
         { type: 'dice', name: 'D8', value: 8 },
         { type: 'dice', name: 'D6', value: 6 },
         { type: 'dice', name: 'D4', value: 4 }
-      ],
-      // rolls: []
+      ]
     }
   },
   computed: {

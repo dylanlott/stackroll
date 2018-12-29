@@ -1,5 +1,7 @@
 <template>
-
+  <v-layout>
+    <v-flex>Hivemind Apps &copy; 2018</v-flex>
+  </v-layout>
 </template>
 
 <style lang="stylus">

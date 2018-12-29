@@ -7,7 +7,11 @@
     </v-content>
   </v-app>
 </template>
-
+<script>
+export default {
+  name: 'stackroll_home'
+}
+</script>
 <style lang="stylus" scope>
 #app
   background: #f5f5f5

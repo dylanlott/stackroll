@@ -4,12 +4,11 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const STORAGE_KEY = 'STACKROLL'
-const version = '0.0.1'
 
 const state = {
-  todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'todos') || '[]'),
-  rolls: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'rolls') || '[]'),
-  tape: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'tape') || '[]'),
+  // todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY+'todos') || '[]'),
+  rolls: JSON.parse(window.localStorage.getItem(`${STORAGE_KEY}-ROLLS`) || '[]'),
+  tape: JSON.parse(window.localStorage.getItem(`${STORAGE_KEY}-TAPE`) || '[]')
 }
 
 const mutations = {
@@ -25,7 +24,8 @@ const mutations = {
   },
   rollStack (state, stack) {
     const { total, possible } = rollDice(stack.stack)
-    // TODO: implement the tape here
+    console.log('pushing to tape: ', stack, total, possible)
+    state.tape.push({ uid: Date.now(), stack, total, possible })
   },
   addTodo (state, todo) {
     state.todos.push(todo)
@@ -84,8 +84,8 @@ const actions = {
 const plugins = [store => {
   store.subscribe((mutation, { todos, rolls, tape }) => {
     window.localStorage.setItem(STORAGE_KEY+'todos', JSON.stringify(todos))
-    window.localStorage.setItem(STORAGE_KEY+'rolls', JSON.stringify(rolls))
-    window.localStorage.setItem(STORAGE_KEY+'tape', JSON.stringify(tape))
+    window.localStorage.setItem(`${STORAGE_KEY}-ROLLS`, JSON.stringify(rolls))
+    window.localStorage.setItem(`${STORAGE_KEY}-TAPE`, JSON.stringify(tape))
   })
 }]
 
@@ -100,14 +100,14 @@ function rollDice(stack) {
   var possible = 0
   var total = 0
   stack.map(item => {
-    const diceRolls = 0
-    if (item.type == 'dice') {
+    if (item.type === 'dice') {
       const val = getRandom(parseInt(item.value))
       possible = possible + parseInt(item.value)
       total = total + parseInt(val)
     }
-    if (item.type == 'modifier') {
-      total = total + parseInt(item.value)
+    if (item.type === 'modifier') {
+      // total = total + parseInt(item.value)
+      possible = possible + parseInt(item.value)
     }
   })
   return {
