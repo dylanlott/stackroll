@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  nginx:
+    image: 'bitnami/nginx:latest'
+    ports:
+      - '9999:8080'
+    volumes:
+      - ./dist/:/app

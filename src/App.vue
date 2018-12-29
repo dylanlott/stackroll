@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <v-app dark id="app">
     <v-content>
       <v-container id="container">
         <router-view></router-view>
@@ -13,9 +13,6 @@ export default {
 }
 </script>
 <style lang="stylus" scope>
-#app
-  background: #f5f5f5
-
 #container
   max-width: 550px
   padding: 8px
