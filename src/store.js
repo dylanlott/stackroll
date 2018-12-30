@@ -83,7 +83,7 @@ const actions = {
 
 const plugins = [store => {
   store.subscribe((mutation, { todos, rolls, tape }) => {
-    window.localStorage.setItem(STORAGE_KEY+'todos', JSON.stringify(todos))
+    // window.localStorage.setItem(STORAGE_KEY+'todos', JSON.stringify(todos))
     window.localStorage.setItem(`${STORAGE_KEY}-ROLLS`, JSON.stringify(rolls))
     window.localStorage.setItem(`${STORAGE_KEY}-TAPE`, JSON.stringify(tape))
   })
@@ -96,12 +96,31 @@ export default new Vuex.Store({
   plugins
 })
 
-function rollDice(stack) {
+function rollDice (stack) {
   var possible = 0
   var total = 0
   stack.map(item => {
     if (item.type === 'dice') {
       const val = getRandom(parseInt(item.value))
+      if (val === item.value) {
+        console.log('natural max', val)
+        // TODO: add for natural max (i.e. a natural D20)
+      }
+
+      if (item.advantage) {
+        const first = getRandom(parseInt(item.value))
+        const second = getRandom(parseInt(item.value))
+        total = total + Math.max(first, second)
+        console.log('advantage roll: ', first, second, Math.max(first, second))
+      }
+
+      if (item.disadvantage) {
+        const first = getRandom(parseInt(item.value))
+        const second = getRandom(parseInt(item.value))
+        total = total + Math.min(first, second)
+        console.log('disadvantage roll: ', first, second, Math.min(first, second))
+      }
+
       possible = possible + parseInt(item.value)
       total = total + parseInt(val)
     }

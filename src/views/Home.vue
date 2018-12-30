@@ -54,7 +54,7 @@
               <v-list-tile :key="index" v-for="(item, index) in roll.stack">
                 {{ item.name }}
                 <v-spacer></v-spacer>
-                <v-btn @click="addStack()" fab small dark color="warning"><v-icon small>delete</v-icon></v-btn>
+                <v-btn @click="addStack()" fab small dark outline small color="error"><v-icon small>delete</v-icon></v-btn>
               </v-list-tile>
             </v-list>
 
@@ -164,7 +164,9 @@ export default {
       return this.$store.state.rolls
     },
     tape () {
-      return this.$store.state.tape
+      const tape = this.$store.state.tape
+      tape.sort((a, b) => b.uid - a.uid)
+      return tape
     }
   },
   methods: {
