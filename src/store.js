@@ -13,7 +13,6 @@ const state = {
 
 const mutations = {
   addRoll (state, roll) {
-    console.log('adding roll: ', roll)
     state.rolls.push(roll)
   },
   editRoll (state, roll) {
@@ -22,9 +21,11 @@ const mutations = {
   removeRoll (state, roll) {
     state.rolls.splice(state.rolls.indexOf(roll), 1)
   },
+  removeTape (state, tape) {
+    state.tape.splice(state.tape.indexOf(tape), 1)
+  },
   rollStack (state, stack) {
     const { total, possible } = rollDice(stack.stack)
-    console.log('pushing to tape: ', stack, total, possible)
     state.tape.push({ uid: Date.now(), stack, total, possible })
   },
   addTodo (state, todo) {
@@ -78,6 +79,10 @@ const actions = {
       .forEach(todo => {
         commit('removeTodo', todo)
       })
+  },
+  clearEverything ({ state, commit }) {
+    state.rolls.forEach((roll) => commit('removeRoll', roll))
+    state.tape.forEach((tape) => commit('removeTape', tape))
   }
 }
 
@@ -125,7 +130,6 @@ function rollDice (stack) {
       total = total + parseInt(val)
     }
     if (item.type === 'modifier') {
-      // total = total + parseInt(item.value)
       possible = possible + parseInt(item.value)
     }
   })

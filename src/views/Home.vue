@@ -52,9 +52,9 @@
 
             <v-list>
               <v-list-tile :key="index" v-for="(item, index) in roll.stack">
-                {{ item.name }}
+                {{ item.name || '' }}
                 <v-spacer></v-spacer>
-                <v-btn @click="addStack()" fab small dark outline small color="error"><v-icon small>delete</v-icon></v-btn>
+                <v-btn @click="addStack()" fab dark outline small color="error"><v-icon small>delete</v-icon></v-btn>
               </v-list-tile>
             </v-list>
 
@@ -92,6 +92,7 @@
       <div class="caption">
         <p>Double-click to edit a stack.</p>
         <p>Single-click to roll a stack.</p>
+        <a @click="clearEverything()">Click here to clear the cache and start over.</a>
       </div>
       <footer-info></footer-info>
     </v-flex>
@@ -174,7 +175,8 @@ export default {
       'toggleAll',
       'clearCompleted',
       'removeRoll',
-      'rollStack'
+      'rollStack',
+      'clearEverything'
     ]),
     addTodo () {
       const text = this.newTodo.trim()
@@ -189,7 +191,7 @@ export default {
     addModifier (mod) {
       this.roll.stack.push({
         value: mod.value,
-        name: mod.name,
+        name: mod.name || '< unnamed >',
         type: 'modifier'
       })
       this.modifier = {
